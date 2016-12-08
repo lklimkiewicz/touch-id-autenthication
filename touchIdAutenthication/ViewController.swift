@@ -13,6 +13,8 @@ class ViewController: UIViewController {
     
     @IBOutlet weak var statusLabel: UILabel!
     @IBOutlet weak var authClicked: UIButton!
+    
+    var ten = 10
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,6 +28,7 @@ class ViewController: UIViewController {
     }
     
     @IBAction func authClickedAction(_ sender: Any) {
+        statusLabel.text = ""
         touchIdCall()
     }
 
@@ -35,12 +38,15 @@ class ViewController: UIViewController {
         if authContext.canEvaluatePolicy(LAPolicy.deviceOwnerAuthenticationWithBiometrics, error: &error){
             authContext.evaluatePolicy(LAPolicy.deviceOwnerAuthenticationWithBiometrics, localizedReason: "Testowanie touch id", reply: { (success, error) in
                     if success {
-                        print(self.statusLabel.isHidden)
-                        self.statusLabel.isHidden = false
-                        self.statusLabel.text = "Odcisk prawidłowy"
+                        OperationQueue.main.addOperation({ () -> Void in
+                            self.statusLabel.isHidden = false
+                            self.statusLabel.text = "Odcisk prawidłowy"
+                        })
                     }else{
-                        self.statusLabel.isHidden = false
-                        self.statusLabel.text = "Odcisk nieprawidłowy"
+                        OperationQueue.main.addOperation({ () -> Void in
+                            self.statusLabel.isHidden = false
+                            self.statusLabel.text = "Odcisk nieprawidłowy"
+                        })
                     }
             })
         }else{
